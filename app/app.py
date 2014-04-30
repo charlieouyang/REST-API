@@ -1,5 +1,7 @@
 import smtplib
 
+import urllib.parse 
+
 from flask import Flask, url_for
 from flask import request, json
 
@@ -73,6 +75,41 @@ app = Flask(__name__)
 def api_root():
     return 'This is a REST API built by Charlie Ou Yang. Please visit www.charlieouyang.com to contact him.'
 
+@app.route('/submit/<data>', methods = ['GET'])
+@crossdomain(origin='*')
+def api_users(data):
+    escaped_str = urllib.parse.unquote(str(data))
+    
+	# Specifying the from and to addresses
+    fromaddr = 'charlieouyangwebsite@gmail.com'
+    toaddrs  = 'charlieouyang@gmail.com'
+    # Writing the message (this message will appear in the email)
+    msg = "\r\n".join([
+        "From: charlieouyangwebsite@gmail.com",
+        "To: charlieouyang@gmail.com",
+        "Subject: Message from your website",
+        "",
+        escaped_str
+        ])
+    # Gmail Login
+    username = 'charlieouyangwebsite@gmail.com'
+    password = 'charlieloveswebsites'
+    # Sending the mail  
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    server.ehlo()
+    server.starttls()
+    server.login(username,password)
+    server.sendmail(fromaddr, toaddrs, msg)
+    server.quit()
+    
+    print(json.dumps(request.json))
+    print(request.json)
+    print(request)
+    print(request.data)
+    print(request.get_json(force=True))
+	
+    return "Success"
+
 @app.route('/data', methods = ['GET', 'POST'])
 @crossdomain(origin='*')
 def data():
@@ -97,7 +134,13 @@ def data():
     server.login(username,password)
     server.sendmail(fromaddr, toaddrs, msg)
     server.quit()
-
+    
+    print(json.dumps(request.json))
+    print(request.json)
+    print(request)
+    print(request.data)
+    print(request.get_json(force=True))
+	
     return "Email sent!"
 
 if __name__ == '__main__':
