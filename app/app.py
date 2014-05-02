@@ -1,9 +1,10 @@
 import smtplib
 
 import urllib.parse 
+import json
 
 from flask import Flask, url_for
-from flask import request, json
+from flask import request
 
 from datetime import timedelta
 from flask import make_response, current_app
@@ -102,46 +103,23 @@ def api_users(data):
     server.sendmail(fromaddr, toaddrs, msg)
     server.quit()
     
-    print(json.dumps(request.json))
-    print(request.json)
-    print(request)
-    print(request.data)
-    print(request.get_json(force=True))
-	
     return "Success"
 
-@app.route('/data', methods = ['GET', 'POST'])
+@app.route('/qxpodata', methods = ['GET'])
 @crossdomain(origin='*')
-def data():
-    # Specifying the from and to addresses
-    fromaddr = 'charlieouyangwebsite@gmail.com'
-    toaddrs  = 'charlieouyang@gmail.com'
-    # Writing the message (this message will appear in the email)
-    msg = "\r\n".join([
-        "From: charlieouyangwebsite@gmail.com",
-        "To: charlieouyang@gmail.com",
-        "Subject: Message from your website",
-        "",
-        json.dumps(request.json)
-        ])
-    # Gmail Login
-    username = 'charlieouyangwebsite@gmail.com'
-    password = 'charlieloveswebsites'
-    # Sending the mail  
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    server.starttls()
-    server.login(username,password)
-    server.sendmail(fromaddr, toaddrs, msg)
-    server.quit()
-    
-    print(json.dumps(request.json))
-    print(request.json)
-    print(request)
-    print(request.data)
-    print(request.get_json(force=True))
-	
-    return "Email sent!"
+def qxpodata():
+    return json.dumps([{"rideID":"27","waitTime":"20","waitingInLine":"","coordinate":"17,71","rideName":"Park Entrance"},
+        {"rideID":"28","waitTime":"5","waitingInLine":"","coordinate":"35,82","rideName":"Dragon Fire"},
+        {"rideID":"29","waitTime":"19","waitingInLine":"","coordinate":"50,67","rideName":"Blast Off!"},
+        {"rideID":"30","waitTime":"40","waitingInLine":"","coordinate":"82,42","rideName":"Minebuster"},
+        {"rideID":"31","waitTime":"72","waitingInLine":"","coordinate":"75,30","rideName":"Dropzone"},
+        {"rideID":"32","waitTime":"15","waitingInLine":"","coordinate":"84,8","rideName":"Night Mares"},
+        {"rideID":"33","waitTime":"0","waitingInLine":"","coordinate":"76,13","rideName":"Shockwave"},
+        {"rideID":"34","waitTime":"36","waitingInLine":"","coordinate":"63,23","rideName":"Psyclone"},
+        {"rideID":"35","waitTime":"20","waitingInLine":"","coordinate":"45,17","rideName":"Kids Zone"},
+        {"rideID":"36","waitTime":"56","waitingInLine":"","coordinate":"28,25","rideName":"Splash Works"},
+        {"rideID":"37","waitTime":"78","waitingInLine":"","coordinate":"17,47","rideName":"Leviathan"},
+        {"rideID":"38","waitTime":"10","waitingInLine":"","coordinate":"23,57","rideName":"Vortex"}])
 
 if __name__ == '__main__':
     app.run()
